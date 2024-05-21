@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            background-color: #4c84af;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div class="content">
+        <div id="stats"></div>
+        <div id="users"></div>
+        <div id="orders"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/stats')
+                .then(response => response.json())
+                .then(data => {
+                    const statsDiv = document.getElementById('stats');
+                    statsDiv.innerHTML = `
+                        <h2>Statistics</h2>
+                        <p>Total Users: ${data.TotalUsers}</p>
+                        <p>Total Orders: ${data.TotalOrders}</p>
+                    `;
+                });
+
+            fetch('/api/users')
+                .then(response => response.json())
+                .then(users => {
+                    const usersDiv = document.getElementById('users');
+                    let userHTML = '<h2>Users</h2><ul>';
+                    users.forEach(user => {
+                        userHTML += `<li>${user.Name}</li>`;
+                    });
+                    userHTML += '</ul>';
+                    usersDiv.innerHTML = userHTML;
+                });
+
+            fetch('/api/orders')
+                .then(response => response.json())
+                .then(orders => {
+                    const ordersDiv = document.getElementById('orders');
+                    let orderHTML = '<h2>Orders</h2><ul>';
+                    orders.forEach(order => {
+                        orderHTML += `<li>Product: ${order.Product}, Quantity: ${order.Quantity}</li>`;
+                    });
+                    orderHTML += '</ul>';
+                    ordersDiv.innerHTML = orderHTML;
+                });
+        });
+    </script>
+</body>
+</html>
